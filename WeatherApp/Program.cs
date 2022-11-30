@@ -14,9 +14,28 @@ namespace WeatherApp
         [STAThread]
         static void Main()
         {
+            try
+            { 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+            }
+            catch (System.Net.WebException ex)
+            {
+                Application.Exit();
+            }
+            catch (ArgumentNullException ex)
+            {
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                Application.Exit();
+            }
+            finally
+            {
+                Application.Exit();
+            }
         }
     }
 }

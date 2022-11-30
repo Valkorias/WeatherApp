@@ -32,26 +32,45 @@ namespace WeatherApp
             GetWeather();
         }
 
-        
+
 
         private void GetWeather()
         {
             using (WebClient OpenWeatherMap = new WebClient())
             {
-                string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}&units=imperial", TbCity.Text, APIKey, pic_icon);
-                var json = OpenWeatherMap.DownloadString(url);
-                WeatherInfo.Root Info = JsonConvert.DeserializeObject<WeatherInfo.Root>(json);
-                pic_icon.ImageLocation = "https://openweathermap.org/img/w/" + Info.Weather[0].icon + ".png";
-                lab_condition.Text = Info.Weather[0].Main;
-                lab_detail.Text = Info.Weather[0].Description;
-                lab_sunset.Text = convertDateTime(Info.Sys.Sunset).ToString();
-                lab_sunrise.Text = convertDateTime(Info.Sys.Sunrise).ToString();
-                lab_windspeed.Text = Info.Wind.Speed.ToString();
-                lab_pressure.Text = Info.Main.Pressure.ToString();
-                lab_temp.Text = Info.Main.Temp.ToString();
-                lab_feelslike.Text = Info.Main.Feels_Like.ToString();
-                lab_tempmin.Text = Info.Main.Temp_Min.ToString();
-                lab_tempmax.Text = Info.Main.Temp_Max.ToString();
+                try
+                {
+                    string url = string.Format("https://api.openweathermap.org/data/2.5/weather?q={0}&appid={1}&units=imperial", TbCity.Text, APIKey, pic_icon);
+                    var json = OpenWeatherMap.DownloadString(url);
+                    WeatherInfo.Root Info = JsonConvert.DeserializeObject<WeatherInfo.Root>(json);
+                    pic_icon.ImageLocation = "https://openweathermap.org/img/w/" + Info.Weather[0].icon + ".png";
+                    lab_condition.Text = Info.Weather[0].Main;
+                    lab_detail.Text = Info.Weather[0].Description;
+                    lab_sunset.Text = convertDateTime(Info.Sys.Sunset).ToString();
+                    lab_sunrise.Text = convertDateTime(Info.Sys.Sunrise).ToString();
+                    lab_windspeed.Text = Info.Wind.Speed.ToString();
+                    lab_pressure.Text = Info.Main.Pressure.ToString();
+                    lab_temp.Text = Info.Main.Temp.ToString();
+                    lab_feelslike.Text = Info.Main.Feels_Like.ToString();
+                    lab_tempmin.Text = Info.Main.Temp_Min.ToString();
+                    lab_tempmax.Text = Info.Main.Temp_Max.ToString();
+                }
+                catch (System.Net.WebException ex)
+                {
+                    Application.Exit();
+                }
+                catch (ArgumentNullException ex)
+                {
+                    Application.Exit();
+                }
+                catch (Exception ex)
+                {
+                    Application.Exit();
+                }
+                finally
+                {
+                    OpenWeatherMap?.Dispose();
+                }
             }
         }
 
